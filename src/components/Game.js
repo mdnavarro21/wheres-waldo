@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react';
-import waldoMap from '../assets/wheres-waldo.jpeg'
-
+import waldoMap from '../assets/wheres-waldo.jpeg';
+import { db } from '../firebase-config';
+import { doc, getDoc } from 'firebase/firestore';
 
 export default function Game() {
     const [clickLocation, setClickLocation] = useState([]);
@@ -19,6 +20,7 @@ export default function Game() {
     const handleClick = (event) => {
         const coords = getClickCoords(event);
         if (isGuessing === false) {
+            console.log(coords);
             setClickLocation(coords);
             setIsGuessing(true);
             targetingDivRef.current.style.display = 'block'
@@ -29,8 +31,19 @@ export default function Game() {
         }
     }
 
-    const handleButtonClick = (event) => {
+    const handleGuess = async (event) => {
         event.stopPropagation();
+        const docRef = doc(db, "character-coordinates", event.currentTarget.id);
+        const docSnap = await getDoc(docRef);
+        const charCoords = docSnap.data().coordinates;   
+        const [userGuess_x, userGuess_y] = clickLocation;
+
+        if ((userGuess_x >= charCoords[0].x_left && userGuess_x <=charCoords[0].x_right) && (userGuess_y >= charCoords[1].y_top && userGuess_y <= charCoords[1].y_bottom)) {
+            console.log('Correct!');
+        }
+        else {
+            console.log('Incorrect');
+        }
     }
 
     return (
@@ -47,9 +60,9 @@ export default function Game() {
                 }}>
                     <div className='circle-marker'></div>
                     <ul className='character-list'>
-                        <li><button onClick={handleButtonClick}>Waldo</button></li>
-                        <li><button onClick={handleButtonClick}>IronMan</button></li>
-                        <li><button onClick={handleButtonClick}>Thor</button></li>
+                        <li><button onClick={handleGuess} id = 'character-1'>Red Soldier</button></li>
+                        <li><button onClick={handleGuess} id = 'character-2'>Blue Soldier</button></li>
+                        <li><button onClick={handleGuess}>Thor</button></li>
                     </ul>
                 </div>
             </div>
