@@ -1,13 +1,15 @@
-import AuthProvider from './contexts/AuthContext';
-import Signup from './components/Signup';
-
+/*import AuthProvider from './contexts/AuthContext';
+import Signup from './components/Signup';*/
+import './styles/styles.css';
+import Game from './components/Game'
 function App() {
   return (
-    <AuthProvider>
-      <div className="App">
-       <Signup />
-      </div>
-    </AuthProvider>
+    <div className="App">
+      <Game />
+      {/*<AuthProvider>
+        <Signup />
+      </AuthProvider>*/}
+    </div>
   );
 }
 
