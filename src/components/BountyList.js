@@ -2,11 +2,7 @@ import React, { useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 
-import BlueSoldier from '../assets/BlueSoldier.png'
-import YellowSoldier from '../assets/YellowSoldier.png'
-import RedSoldier from '../assets/RedSoldier.png'
-
-export default function BountyList() {
+export default function BountyList({ characters }) {
   const [show, setShow] = useState(false);
 
   const handleClose = () => setShow(false);
@@ -23,18 +19,17 @@ export default function BountyList() {
           <Modal.Title>Characters to Find</Modal.Title>
         </Modal.Header>
         <Modal.Body className = 'd-flex justify-content-around'>
-            <div className={'character-container'}>
-                <h2>Red Soldier</h2>
-                <img src={ RedSoldier } alt='Red Soldier'/>
-            </div>
-            <div className='character-container'>
-                <h2>Blue Soldier</h2>
-                <img src={ BlueSoldier } alt = 'Blue Soldier'/>
-            </div>
-            <div className='character-container'>
-                <h2>Yellow Soldier</h2>
-                <img src={ YellowSoldier } alt = 'Yellow Soldier'/>
-            </div>
+            {
+
+                characters.map((character) => {
+                    return (
+                        <div key = { character.id } className= {'character-container ' + (character.found === true ? 'transparent' : '')}>
+                            <h2>{character.name}</h2>
+                            <img src = { require(`../assets/characters/${character.url}.png`)} alt = {character.name}/>
+                        </div>
+                    )
+                })
+            }
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleClose}>

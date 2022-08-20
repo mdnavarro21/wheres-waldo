@@ -1,17 +1,34 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import waldoMap from '../assets/wheres-waldo.jpeg';
 import BountyList from './BountyList';
 import { db } from '../firebase-config';
-import { doc, getDoc } from 'firebase/firestore';
-
+import { collection, getDocs } from "firebase/firestore";
 import styled from 'styled-components';
-
 
 export default function Game() {
     const [clickLocation, setClickLocation] = useState([]);
     const [isGuessing, setIsGuessing] = useState(false);
     const [correctGuesses, setCorrectGuesses] = useState([]);
+    const [characters, setCharacters] = useState([]);
+
     const targetingDivRef = useRef();
+
+    useEffect(() => {
+        async function fetchData() {
+            const querySnapshot = await getDocs(collection(db, "character-coordinates"));
+            querySnapshot.forEach((doc) => {
+                const character = {
+                    id: doc.id,
+                    ...doc.data(),
+                    found: false,
+                }
+                setCharacters(prev => {
+                    return [...prev, character];
+                })
+            });            
+        }
+        fetchData();
+    },[]);
 
     const getClickCoordinates = (event) => {
         let e = event.currentTarget;
@@ -24,7 +41,6 @@ export default function Game() {
     const handleClick = (event) => {
         if (isGuessing === false) {
             const clickCoordinates = getClickCoordinates(event);
-            console.log(clickCoordinates);
             setClickLocation(clickCoordinates);
             setIsGuessing(true);
             targetingDivRef.current.style.display = 'block'
@@ -34,18 +50,25 @@ export default function Game() {
             targetingDivRef.current.style.display = 'none';
         }
     }
-    const getCoordinatesFromDatabase = async (guess) => {
-        const docRef = doc(db, "character-coordinates", guess.id);
-        const docSnap = await getDoc(docRef); 
-        return docSnap.data().coordinates;  
-    }
+
     const handleGuess = async (event) => {
         event.stopPropagation();
-        const userGuess = event.currentTarget;
-        const characterCoordinates = await getCoordinatesFromDatabase(userGuess); 
-        if ((clickLocation[0] >= characterCoordinates[0].x_left && clickLocation[0]<=characterCoordinates[0].x_right) && (clickLocation[1] >= characterCoordinates[1].y_top && clickLocation[1] <= characterCoordinates[1].y_bottom)) {
-            userGuess.disabled = true;
+        const userGuess = characters.find((character) => character.id === event.currentTarget.id);
+        const characterCoordinates = userGuess.coordinates;
+        if ((clickLocation[0] >= characterCoordinates[0].x_left && clickLocation[0]<=characterCoordinates[0].x_right) 
+        && (clickLocation[1] >= characterCoordinates[1].y_top && clickLocation[1] <= characterCoordinates[1].y_bottom)) {
             setCorrectGuesses(prevGuesses => [...prevGuesses, [clickLocation[0],clickLocation[1]]]);
+            setCharacters(previousArray => {
+                return previousArray.map((character) => {
+                    if (character.id === userGuess.id) {
+                        return {
+                            ...character,
+                            found: true
+                        }
+                    }
+                    return character;
+                })
+            })
         }
         else {
             console.log('Incorrect');
@@ -55,8 +78,8 @@ export default function Game() {
     }
 
     return (
-        <>
-            <BountyList />       
+        <>  
+            <BountyList characters = {characters}/>       
             <div className='image-container' onClick={ handleClick }>
                 <img src={ waldoMap } alt = 'wheres-waldo'/>
 
@@ -67,9 +90,21 @@ export default function Game() {
                 <TargetingDiv ref = {targetingDivRef} clickCoordinates= {[clickLocation[0],clickLocation[1]]}>
                     <CircleMarker />
                     <ul className='character-list'>
-                        <li><button onClick={ handleGuess } id = 'character-1'>Red Soldier</button></li>
-                        <li><button onClick={ handleGuess } id = 'character-2'>Blue Soldier</button></li>
-                        <li><button onClick={ handleGuess } id = 'character-3'>Yellow Soldier</button></li>
+                        { 
+                            characters.map((character) => {
+                                return (
+                                    <li key = { character.id }>
+                                        <input 
+                                            type = 'button' 
+                                            id = { character.id } 
+                                            value = { character.name } 
+                                            onClick={ handleGuess } 
+                                            disabled={ character.found } />
+                                    </li>
+                                )
+
+                            })
+                        }
                     </ul>                    
                 </TargetingDiv>
             </div>
