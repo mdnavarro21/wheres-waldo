@@ -1,16 +1,17 @@
 import React, { useState, useRef, useEffect } from 'react';
-import waldoMap from '../assets/wheres-waldo.jpeg';
-import BountyList from './BountyList';
 import { db } from '../firebase-config';
 import { collection, getDocs } from "firebase/firestore";
-import styled from 'styled-components';
+
+import BountyList from './BountyList';
+import Timer from './Timer';
+import WaldoMap from './WaldoMap';
 
 export default function Game() {
     const [clickLocation, setClickLocation] = useState([]);
     const [isGuessing, setIsGuessing] = useState(false);
     const [correctGuesses, setCorrectGuesses] = useState([]);
     const [characters, setCharacters] = useState([]);
-
+    const [gameHasStarted, setGameHasStarted] = useState(true);
     const targetingDivRef = useRef();
 
     useEffect(() => {
@@ -29,6 +30,12 @@ export default function Game() {
         }
         fetchData();
     },[]);
+
+    useEffect(() => {
+        if (correctGuesses.length === 3) {
+            setGameHasStarted(false);
+        }
+    }, [correctGuesses])
 
     const getClickCoordinates = (event) => {
         let e = event.currentTarget;
@@ -52,7 +59,6 @@ export default function Game() {
     }
 
     const handleGuess = async (event) => {
-        event.stopPropagation();
         const userGuess = characters.find((character) => character.id === event.currentTarget.id);
         const characterCoordinates = userGuess.coordinates;
         if ((clickLocation[0] >= characterCoordinates[0].x_left && clickLocation[0]<=characterCoordinates[0].x_right) 
@@ -77,63 +83,23 @@ export default function Game() {
         setIsGuessing(false);
     }
 
+    const cmpProps = {
+        handleClick, 
+        clickLocation, 
+        correctGuesses, 
+        characters, 
+        handleGuess, 
+        targetingDivRef
+    }
+
     return (
         <>  
-            <BountyList characters = {characters}/>       
-            <div className='image-container' onClick={ handleClick }>
-                <img src={ waldoMap } alt = 'wheres-waldo'/>
-
-                {correctGuesses.map((guess, index) => {
-                        return <CircleMarker key = {index} coordinates = {[guess[0],guess[1]]} />
-                })}
-
-                <TargetingDiv ref = {targetingDivRef} clickCoordinates= {[clickLocation[0],clickLocation[1]]}>
-                    <CircleMarker />
-                    <ul className='character-list'>
-                        { 
-                            characters.map((character) => {
-                                return (
-                                    <li key = { character.id }>
-                                        <input 
-                                            type = 'button' 
-                                            id = { character.id } 
-                                            value = { character.name } 
-                                            onClick={ handleGuess } 
-                                            disabled={ character.found } />
-                                    </li>
-                                )
-
-                            })
-                        }
-                    </ul>                    
-                </TargetingDiv>
-            </div>
-
+            <header><h1>Find each character as fast as possible!</h1></header>
+            <BountyList characters = {characters}/> 
+            <Timer running = { gameHasStarted }/>     
+            <WaldoMap { ...cmpProps }/>
         </>
     )
 }
-
-const TargetingDiv = styled.div`
-    position: absolute;
-    height: 100px;
-    width: 100px;
-    display: none;    
-    left: ${props => props.clickCoordinates[0] - 1}%;
-    top: ${props => props.clickCoordinates[1] - 2}%;
-`
-
-const CircleMarker = styled.div`
-    border: 4px solid red;
-    width: 4vh;
-    height: 4vh;
-    color: white;
-    border-radius: 50%;
-    ${props => props.coordinates && `
-        border: 4px solid black;
-        position: absolute;
-        top: ${props.coordinates[1]-2}%;
-        left: ${props.coordinates[0]-1}%;
-    `}
-`
 
 
