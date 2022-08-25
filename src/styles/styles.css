@@ -1,7 +1,5 @@
 .image-container {
     width: 100vw;
-
-    border-style: solid;  
     
     position: relative;
 }
@@ -42,4 +40,29 @@ img {
 
 .transparent {
     opacity: 0.2;
+}
+
+.sticky {
+    position: sticky;
+    top: 10px;
+    left: 10px;
+    z-index: 1;
+
+    border-style: solid;
+    border-radius: 10px;
+
+    background-color: lightcyan;
+
+    width: 12vw;
+    height: 14vh;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.stopwatch {
+    border-style: solid;
+    width: 80%;
 }

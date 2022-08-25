@@ -96,8 +96,12 @@ export default function Game() {
     return (
         <>  
             <StartModal handleStart = { () => { setGameHasStarted(true)} } />
-            <BountyList characters = {characters}/> 
-            <Timer running = { gameHasStarted }/>     
+            <div className='sticky'>
+                <Timer running = { gameHasStarted }/>
+                <BountyList characters = {characters}/> 
+            </div>
+
+                 
             <WaldoMap { ...cmpProps }/>
         </>
     )

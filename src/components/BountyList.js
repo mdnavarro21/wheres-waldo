@@ -10,7 +10,7 @@ export default function BountyList({ characters }) {
 
   return (
     <>
-      <Button className= "sticky-top" variant="dark" onClick={handleShow}>
+      <Button variant="dark" onClick={handleShow}>
         Character List
       </Button>
 
