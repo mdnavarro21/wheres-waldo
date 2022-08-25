@@ -5,13 +5,14 @@ import { collection, getDocs } from "firebase/firestore";
 import BountyList from './BountyList';
 import Timer from './Timer';
 import WaldoMap from './WaldoMap';
+import StartModal from './StartModal';
 
 export default function Game() {
     const [clickLocation, setClickLocation] = useState([]);
     const [isGuessing, setIsGuessing] = useState(false);
     const [correctGuesses, setCorrectGuesses] = useState([]);
     const [characters, setCharacters] = useState([]);
-    const [gameHasStarted, setGameHasStarted] = useState(true);
+    const [gameHasStarted, setGameHasStarted] = useState(false);
     const targetingDivRef = useRef();
 
     useEffect(() => {
@@ -94,7 +95,7 @@ export default function Game() {
 
     return (
         <>  
-            <header><h1>Find each character as fast as possible!</h1></header>
+            <StartModal handleStart = { () => { setGameHasStarted(true)} } />
             <BountyList characters = {characters}/> 
             <Timer running = { gameHasStarted }/>     
             <WaldoMap { ...cmpProps }/>
