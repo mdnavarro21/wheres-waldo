@@ -25,7 +25,7 @@ export default function BountyList({ characters }) {
                     return (
                         <div key = { character.id } className= {'character-container ' + (character.found === true ? 'transparent' : '')}>
                             <h2>{character.name}</h2>
-                            <img src = { require(`../assets/characters/${character.url}.png`)} alt = {character.name}/>
+                            <img src = { require(`../../assets/characters/${character.url}.png`)} alt = {character.name}/>
                         </div>
                     )
                 })

@@ -1,5 +1,5 @@
 import React from 'react'
-import waldoMap from '../assets/wheres-waldo.jpeg';
+import waldoMap from '../../assets/wheres-waldo.jpeg';
 import styled from 'styled-components';
 
 export default function WaldoMap(props) {

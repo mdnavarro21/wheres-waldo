@@ -1,19 +1,39 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { db } from '../firebase-config';
+import { db } from '../../firebase-config';
 import { collection, getDocs } from "firebase/firestore";
 
 import BountyList from './BountyList';
 import Timer from './Timer';
 import WaldoMap from './WaldoMap';
 import StartModal from './StartModal';
+import EndModal from './EndModal';
 
 export default function Game() {
     const [clickLocation, setClickLocation] = useState([]);
+    const [time, setTime] = useState(0);
+    const [userName, setUserName ] = useState('');
     const [isGuessing, setIsGuessing] = useState(false);
     const [correctGuesses, setCorrectGuesses] = useState([]);
+
     const [characters, setCharacters] = useState([]);
+
     const [gameHasStarted, setGameHasStarted] = useState(false);
+    const [gameHasEnded, setGameHasEnded] = useState(false);
+
     const targetingDivRef = useRef();
+    
+
+    useEffect(() => {
+      let interval;
+      if (gameHasStarted) {
+        interval = setInterval(() => {
+          setTime((prevTime) => prevTime + 10);
+        }, 10);
+      } else if (!gameHasStarted) {
+        clearInterval(interval);
+      }
+      return () => clearInterval(interval);
+    }, [gameHasStarted]);
 
     useEffect(() => {
         async function fetchData() {
@@ -35,8 +55,10 @@ export default function Game() {
     useEffect(() => {
         if (correctGuesses.length === 3) {
             setGameHasStarted(false);
+            setGameHasEnded(true);
+            console.log(time);
         }
-    }, [correctGuesses])
+    }, [correctGuesses.length, time])
 
     const getClickCoordinates = (event) => {
         let e = event.currentTarget;
@@ -84,6 +106,14 @@ export default function Game() {
         setIsGuessing(false);
     }
 
+    const handleChange = (event) => {
+        setUserName(event.target.value);
+    }
+    const addToLeaderboard = (event) => {
+        console.log(time);
+        console.log(userName);
+        event.preventDefault();
+    }
     const cmpProps = {
         handleClick, 
         clickLocation, 
@@ -97,12 +127,11 @@ export default function Game() {
         <>  
             <StartModal handleStart = { () => { setGameHasStarted(true)} } />
             <div className='sticky'>
-                <Timer running = { gameHasStarted }/>
+                <Timer time = { time }/>
                 <BountyList characters = {characters}/> 
             </div>
-
-                 
             <WaldoMap { ...cmpProps }/>
+            <EndModal showModal = { gameHasEnded } time = { time } addToLeaderboard={ addToLeaderboard } handleChange={ handleChange }/>
         </>
     )
 }

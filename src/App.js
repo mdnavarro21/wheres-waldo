@@ -2,7 +2,7 @@
 import Signup from './components/Signup';*/
 import './styles/styles.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import Game from './components/Game'
+import Game from './components/game/Game'
 function App() {
   return (
     <div className="App">
