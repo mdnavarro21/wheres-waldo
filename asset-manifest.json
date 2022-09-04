@@ -1,17 +1,17 @@
 {
   "files": {
-    "main.css": "/react-gh-pages/static/css/main.76841fda.css",
-    "main.js": "/react-gh-pages/static/js/main.dfb5ed9b.js",
-    "static/media/wheres-waldo.jpeg": "/react-gh-pages/static/media/wheres-waldo.06972bf50baca0816f94.jpeg",
-    "static/media/RedSoldier.png": "/react-gh-pages/static/media/RedSoldier.c8e7a1fe7982a68718c5.png",
-    "static/media/BlueSoldier.png": "/react-gh-pages/static/media/BlueSoldier.155c5919bc46f2d4ca69.png",
-    "static/media/YellowSoldier.png": "/react-gh-pages/static/media/YellowSoldier.0cb2d25fa59b02b1f8b9.png",
-    "index.html": "/react-gh-pages/index.html",
-    "main.76841fda.css.map": "/react-gh-pages/static/css/main.76841fda.css.map",
-    "main.dfb5ed9b.js.map": "/react-gh-pages/static/js/main.dfb5ed9b.js.map"
+    "main.css": "/wheres-waldo/static/css/main.76841fda.css",
+    "main.js": "/wheres-waldo/static/js/main.6bccc164.js",
+    "static/media/wheres-waldo.jpeg": "/wheres-waldo/static/media/wheres-waldo.06972bf50baca0816f94.jpeg",
+    "static/media/RedSoldier.png": "/wheres-waldo/static/media/RedSoldier.c8e7a1fe7982a68718c5.png",
+    "static/media/BlueSoldier.png": "/wheres-waldo/static/media/BlueSoldier.155c5919bc46f2d4ca69.png",
+    "static/media/YellowSoldier.png": "/wheres-waldo/static/media/YellowSoldier.0cb2d25fa59b02b1f8b9.png",
+    "index.html": "/wheres-waldo/index.html",
+    "main.76841fda.css.map": "/wheres-waldo/static/css/main.76841fda.css.map",
+    "main.6bccc164.js.map": "/wheres-waldo/static/js/main.6bccc164.js.map"
   },
   "entrypoints": [
     "static/css/main.76841fda.css",
-    "static/js/main.dfb5ed9b.js"
+    "static/js/main.6bccc164.js"
   ]
 }
