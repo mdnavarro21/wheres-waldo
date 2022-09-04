@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { db } from '../../firebase-config';
-import { collection, getDocs } from "firebase/firestore";
+import { collection, getDocs, addDoc } from "firebase/firestore";
 
 import BountyList from './BountyList';
 import Timer from './Timer';
@@ -22,6 +23,7 @@ export default function Game() {
 
     const targetingDivRef = useRef();
     
+    const navigate = useNavigate();
 
     useEffect(() => {
       let interval;
@@ -56,7 +58,6 @@ export default function Game() {
         if (correctGuesses.length === 3) {
             setGameHasStarted(false);
             setGameHasEnded(true);
-            console.log(time);
         }
     }, [correctGuesses.length, time])
 
@@ -109,10 +110,16 @@ export default function Game() {
     const handleChange = (event) => {
         setUserName(event.target.value);
     }
-    const addToLeaderboard = (event) => {
+    const addToLeaderboard = async (event) => {
         console.log(time);
         console.log(userName);
         event.preventDefault();
+        await addDoc(collection(db, "leaderboards"), {
+            name: userName,
+            time: time
+        })
+        navigate('/leaderboards');
+
     }
     const cmpProps = {
         handleClick, 

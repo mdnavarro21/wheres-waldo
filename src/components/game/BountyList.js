@@ -14,7 +14,7 @@ export default function BountyList({ characters }) {
         Character List
       </Button>
 
-      <Modal show={show} onHide={handleClose} dialogClassName="modal-90w">
+      <Modal show={show} onHide={handleClose} dialogClassName="modal-60w">
         <Modal.Header closeButton>
           <Modal.Title>Characters to Find</Modal.Title>
         </Modal.Header>

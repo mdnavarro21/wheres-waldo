@@ -26,8 +26,8 @@ img {
     width: 100%
 }
 
-.modal-90w {
-    min-width: 90%;
+.modal-60w {
+    min-width: 60%;
 }
 
 .character-container {
@@ -43,7 +43,7 @@ img {
 }
 
 .sticky {
-    position: sticky;
+    position: fixed;
     top: 10px;
     left: 10px;
     z-index: 1;
